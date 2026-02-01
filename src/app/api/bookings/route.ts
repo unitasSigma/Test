@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { prisma, isDbAvailable } from '@/lib/prisma';
 import { AppointmentStatus } from '@prisma/client';
 
 export async function POST(req: NextRequest) {
@@ -11,15 +11,20 @@ export async function POST(req: NextRequest) {
     }
 
     const start = new Date(startTime);
-    // Assume 2 hour slots for simplicity or fetch duration from service
-    const service = await prisma.service.findUnique({ where: { id: serviceId } });
-    if (!service) return NextResponse.json({ error: 'Service not found' }, { status: 404 });
-    
-    const end = new Date(start.getTime() + service.duration * 60000);
+    const duration = 120; // Default 2 hours
+    const end = new Date(start.getTime() + duration * 60000);
+
+    if (!isDbAvailable) {
+      // Mock success for demo
+      return NextResponse.json({
+        id: 'mock_' + Math.random().toString(36).substr(2, 9),
+        status: 'PENDING',
+        message: 'Mock booking successful (Database not connected)'
+      });
+    }
 
     // Atomic Booking logic using Serializable transaction
-    const result = await prisma.$transaction(async (tx) => {
-      // 1. Check for overlapping appointments for the same detailer
+    const result = await prisma!.$transaction(async (tx) => {
       const overlapping = await tx.appointment.findFirst({
         where: {
           detailerId,
@@ -35,8 +40,7 @@ export async function POST(req: NextRequest) {
         throw new Error('DETAIL_SLOT_TAKEN');
       }
 
-      // 2. Create the appointment in PENDING status
-      const appointment = await tx.appointment.create({
+      return await tx.appointment.create({
         data: {
           userId,
           serviceId,
@@ -48,8 +52,6 @@ export async function POST(req: NextRequest) {
           totalPrice,
         },
       });
-
-      return appointment;
     }, {
       isolationLevel: 'Serializable',
     });

@@ -1,0 +1,13 @@
+
+> apex-gloss@0.1.0 start
+> next start
+
+  ▲ Next.js 15.0.0
+  - Local:        http://localhost:3001
+
+ ✓ Starting...
+ ✓ Ready in 746ms
+ ⨯ upstream image response failed for https://images.unsplash.com/photo-1619405264299-736f8bb14120?auto=format&fit=crop&q=80&w=1000 404
+ ⨯ upstream image response failed for https://images.unsplash.com/photo-1599408162162-cdb65b16954e?auto=format&fit=crop&q=80&w=1000 404
+ ⨯ upstream image response failed for https://images.unsplash.com/photo-1619405264299-736f8bb14120?auto=format&fit=crop&q=80&w=1000 404
+ ⨯ upstream image response failed for https://images.unsplash.com/photo-1599408162162-cdb65b16954e?auto=format&fit=crop&q=80&w=1000 404
