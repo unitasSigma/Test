@@ -1,12 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-import Stripe from 'stripe';
 import { stripe } from '@/lib/stripe';
-import { prisma } from '@/lib/prisma';
+import { prisma, isDbAvailable } from '@/lib/prisma';
 import { AppointmentStatus } from '@prisma/client';
 
 export async function POST(req: NextRequest) {
   const payload = await req.text();
-  const signature = req.headers.get('stripe-signature') as string;
+  const signature = req.headers.get('stripe-signature');
+
+  if (!stripe || !signature || !process.env.STRIPE_WEBHOOK_SECRET) {
+    return NextResponse.json({ message: 'Webhook received (Mocked/Disabled)' }, { status: 200 });
+  }
 
   let event;
 
@@ -16,21 +19,18 @@ export async function POST(req: NextRequest) {
       signature,
       process.env.STRIPE_WEBHOOK_SECRET!
     );
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Unknown error';
-    return NextResponse.json({ error: `Webhook Error: ${message}` }, { status: 400 });
+  } catch (err: any) {
+    return NextResponse.json({ error: `Webhook Error: ${err.message}` }, { status: 400 });
   }
 
-  if (event.type === 'checkout.session.completed') {
-    const session = event.data.object as Stripe.Checkout.Session;
-    const appointmentId = session.metadata?.appointmentId;
+  if (event.type === 'checkout.session.completed' && isDbAvailable) {
+    const session = event.data.object as any;
+    const appointmentId = session.metadata.appointmentId;
 
-    if (appointmentId) {
-      await prisma.appointment.update({
-        where: { id: appointmentId },
-        data: { status: AppointmentStatus.CONFIRMED },
-      });
-    }
+    await prisma!.appointment.update({
+      where: { id: appointmentId },
+      data: { status: AppointmentStatus.CONFIRMED },
+    });
   }
 
   return NextResponse.json({ received: true });
