@@ -101,7 +101,7 @@ export default function BookingWizard() {
               {VEHICLE_SIZES.map((size) => (
                 <button
                   key={size.id}
-                  onClick={() => setVehicleSize(size.id as any)}
+                  onClick={() => setVehicleSize(size.id as "COUPE" | "SEDAN" | "SUV")}
                   className={`p-6 rounded-xl border transition-all ${
                     vehicleSize === size.id 
                       ? 'bg-gold/10 border-gold text-gold shadow-[0_0_20px_rgba(212,175,55,0.2)]' 
