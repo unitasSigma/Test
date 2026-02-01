@@ -1,101 +1,118 @@
-import Image from "next/image";
+'use client';
+
+import { motion } from 'framer-motion';
+import BeforeAfterSlider from '@/components/BeforeAfterSlider';
+import BookingWizard from '@/components/BookingWizard';
+import MacroGallery from '@/components/MacroGallery';
+import MagneticButton from '@/components/MagneticButton';
+import { Shield, Zap, Star } from 'lucide-react';
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2
+    }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 }
+};
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <main className="pt-32 pb-20">
+      {/* Hero Section */}
+      <section className="px-8 mb-32 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <h1 className="text-6xl md:text-8xl font-serif mb-8 leading-tight">
+            The Perfection of <br />
+            <span className="gold-text italic">Reflected Light</span>
+          </h1>
+          <p className="max-w-2xl mx-auto text-silver/60 text-lg mb-12 tracking-wide">
+            Specializing in high-end paint correction and nanoceramic protection for the world&apos;s most prestigious automobiles.
+          </p>
+          <div className="flex justify-center">
+            <MagneticButton>
+              <button className="px-12 py-5 bg-gold text-luxury-black font-bold uppercase tracking-[0.3em] text-xs rounded-full hover:bg-gold-light transition-all shadow-[0_20px_40px_rgba(212,175,55,0.2)]">
+                Book an Appointment
+              </button>
+            </MagneticButton>
+          </div>
+        </motion.div>
+      </section>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      {/* Macro Gallery Section */}
+      <section id="gallery" className="px-8 mb-32">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-5xl font-serif mb-4 italic">Macro Precision</h2>
+            <p className="text-silver/50 max-w-xl mx-auto uppercase tracking-widest text-[10px] font-bold">Details that others miss, we celebrate.</p>
+          </div>
+          <MacroGallery />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+      </section>
+
+      {/* Before/After Section */}
+      <section className="px-8 mb-32">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-8">
+            <div className="max-w-xl">
+              <h2 className="text-4xl font-serif mb-4">Visible Transformation</h2>
+              <p className="text-silver/50">Slide to witness the restoration of a 1967 GT500 from swirl-marked paint to a flawless ceramic-coated finish.</p>
+            </div>
+            <div className="text-sm uppercase tracking-widest text-gold border-b border-gold/30 pb-2">Master Correction Phase</div>
+          </div>
+          <BeforeAfterSlider 
+            beforeImage="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&q=80&w=2000"
+            afterImage="https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&q=80&w=2000"
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+        </div>
+      </section>
+
+      {/* Services Section */}
+      <section id="services" className="px-8 mb-32">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-4xl font-serif mb-16 text-center italic">Curated Treatments</h2>
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid grid-cols-1 md:grid-cols-3 gap-8"
+          >
+            {[
+              { icon: Shield, title: 'Paint Protection', desc: 'Self-healing PPF and multi-layer ceramic coatings.' },
+              { icon: Zap, title: 'Paint Correction', desc: 'Multi-stage machine polishing to absolute clarity.' },
+              { icon: Star, title: 'Bespoke Detailing', desc: 'Concours-level interior and exterior restoration.' }
+            ].map((service, i) => (
+              <motion.div key={i} variants={itemVariants} className="p-10 rounded-2xl bg-white/5 silver-border hover:bg-white/10 transition-all group">
+                <service.icon className="text-gold mb-6 group-hover:scale-110 transition-transform" size={40} />
+                <h3 className="text-2xl font-serif mb-4">{service.title}</h3>
+                <p className="text-silver/40 leading-relaxed">{service.desc}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Booking Wizard Section */}
+      <section id="booking" className="px-8 mb-32">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-5xl font-serif mb-4">Secure Your Session</h2>
+            <p className="text-silver/50">Configure your bespoke detailing package and check real-time availability.</p>
+          </div>
+          <BookingWizard />
+        </div>
+      </section>
+    </main>
   );
 }
