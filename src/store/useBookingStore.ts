@@ -2,52 +2,48 @@ import { create } from 'zustand';
 
 export type VehicleSize = 'COUPE' | 'SEDAN' | 'SUV';
 
-interface Service {
-  id: string;
-  name: string;
-  basePrice: number;
-}
-
 interface BookingState {
   step: number;
   vehicleSize: VehicleSize;
-  selectedService: Service | null;
+  selectedServiceId: string | null;
+  selectedDetailerId: string | null;
+  startTime: string | null;
   totalPrice: number;
+  isSubmitting: boolean;
+  
   setStep: (step: number) => void;
   setVehicleSize: (size: VehicleSize) => void;
-  setSelectedService: (service: Service | null) => void;
-  calculateTotalPrice: () => void;
+  setSelectedServiceId: (id: string | null) => void;
+  setSelectedDetailerId: (id: string | null) => void;
+  setStartTime: (time: string | null) => void;
+  setTotalPrice: (price: number) => void;
+  setIsSubmitting: (loading: boolean) => void;
   reset: () => void;
 }
 
-const VEHICLE_MULTIPLIERS: Record<VehicleSize, number> = {
-  COUPE: 1.0,
-  SEDAN: 1.2,
-  SUV: 1.5,
-};
-
-export const useBookingStore = create<BookingState>((set, get) => ({
+export const useBookingStore = create<BookingState>((set) => ({
   step: 1,
   vehicleSize: 'SEDAN',
-  selectedService: null,
+  selectedServiceId: null,
+  selectedDetailerId: null,
+  startTime: null,
   totalPrice: 0,
+  isSubmitting: false,
+
   setStep: (step) => set({ step }),
-  setVehicleSize: (vehicleSize) => {
-    set({ vehicleSize });
-    get().calculateTotalPrice();
-  },
-  setSelectedService: (selectedService) => {
-    set({ selectedService });
-    get().calculateTotalPrice();
-  },
-  calculateTotalPrice: () => {
-    const { selectedService, vehicleSize } = get();
-    if (!selectedService) {
-      set({ totalPrice: 0 });
-      return;
-    }
-    const multiplier = VEHICLE_MULTIPLIERS[vehicleSize];
-    set({ totalPrice: selectedService.basePrice * multiplier });
-  },
-  reset: () => set({ step: 1, vehicleSize: 'SEDAN', selectedService: null, totalPrice: 0 }),
+  setVehicleSize: (vehicleSize) => set({ vehicleSize }),
+  setSelectedServiceId: (selectedServiceId) => set({ selectedServiceId }),
+  setSelectedDetailerId: (selectedDetailerId) => set({ selectedDetailerId }),
+  setStartTime: (startTime) => set({ startTime }),
+  setTotalPrice: (totalPrice) => set({ totalPrice }),
+  setIsSubmitting: (isSubmitting) => set({ isSubmitting }),
+  reset: () => set({ 
+    step: 1, 
+    vehicleSize: 'SEDAN', 
+    selectedServiceId: null, 
+    selectedDetailerId: null,
+    startTime: null,
+    totalPrice: 0,
+    isSubmitting: false 
+  }),
 }));
